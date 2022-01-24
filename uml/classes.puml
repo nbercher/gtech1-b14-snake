@@ -1,0 +1,13 @@
+@startuml
+Class MainSDLWindow{
+__ public __
+void MainSDLWindow(void)
+void ~MainSDLWindow(void)
+int Init(const char name[], int width, int height)
+SDL_Renderer *GetRenderer(void)
+
+__ private __
+SDL_Window * window;
+SDL_Renderer * renderer;
+}
+@enduml
