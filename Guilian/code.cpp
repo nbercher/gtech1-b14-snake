@@ -14,7 +14,7 @@ MainSDLWindow::~MainSDLWindow(){
 }
 
 SDL_Rect MainSDLWindow::GetRect(){
-    return square;
+    return rect;
 }
 
 int MainSDLWindow::Init(const char nom[], int width, int height){
@@ -28,10 +28,10 @@ int MainSDLWindow::Init(const char nom[], int width, int height){
         cout << "Erreur lors de la creation d'un renderer :" << SDL_GetError();
         return EXIT_FAILURE;
     }
-    square.x = 300;
-    square.y = 300;
-    square.h = 20;
-    square.w = 20;
+    rect.x = 300;
+    rect.y = 300;
+    rect.h = 20;
+    rect.w = 20;
     return EXIT_SUCCESS;
 }
 
@@ -43,16 +43,16 @@ void keyboard() {
   const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 
   if (keystates[SDL_SCANCODE_UP]) {
-     
+     dir = "u";
   }
   if (keystates[SDL_SCANCODE_DOWN]) {
-    
+    dir = "d";
   }
   if (keystates[SDL_SCANCODE_LEFT]) {
-    
+    dir = "l";
   }
   if (keystates[SDL_SCANCODE_RIGHT]) {
-    
+    dir = "r";
   }
 }
 
@@ -89,13 +89,14 @@ int main(){
         }
     }
     move();
+    keyboard();
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(renderer, &square);
     SDL_RenderPresent(renderer);
-    SDL_Delay(2000);
+    SDL_Delay(500);
 
 
     }
