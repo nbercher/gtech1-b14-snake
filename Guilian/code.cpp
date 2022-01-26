@@ -1,7 +1,13 @@
 #include "code.hpp"
 
+#define NBL 16
+#define NBC 32
+
 MainSDLWindow fenetre;
+
 string dir = "r";
+int **tab = NULL;
+
 
 MainSDLWindow::MainSDLWindow(){
     this-> window, renderer = NULL;
@@ -12,6 +18,24 @@ MainSDLWindow::~MainSDLWindow(){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
+
+int **tab_malloc() {
+  int **tab_ = (int**)malloc(NBL * sizeof(int*));
+  for(int l=0; l<NBL; l++)
+    tab_[l] = (int*)malloc(NBC * sizeof(int));
+  return tab_;
+}
+
+void initTab(){
+    tab = tab_malloc();
+    for (int l=0; l<NBL; l++) {
+        for (int c=0; c<NBC; c++) {
+	  tab[l][c] = 0; 
+        }
+    }
+    tab[NBL/2][NBC/2] = 2;
+}
+
 
 SDL_Rect MainSDLWindow::GetRect(){
     return rect;
@@ -73,6 +97,7 @@ void move(void){
 }
 
 int main(){
+    initTab();
     bool IsGameRunning = true;
     SDL_Rect square = fenetre.GetRect();
     fenetre.Init("une fenêtre", 600, 600);
