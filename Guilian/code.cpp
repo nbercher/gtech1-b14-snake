@@ -7,6 +7,7 @@ MainSDLWindow fenetre;
 
 string dir = "r";
 int **tab = NULL;
+int head[2];
 
 
 MainSDLWindow::MainSDLWindow(){
@@ -34,6 +35,8 @@ void initTab(){
         }
     }
     tab[NBL/2][NBC/2] = 2;
+    head[0] = NBL/2;
+    head[1] = NBC/2;
 }
 
 
@@ -63,36 +66,44 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void){
     return renderer;
 }
 
+
 void keyboard() {
   const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 
-  if (keystates[SDL_SCANCODE_UP]) {
+  if (keystates[SDL_SCANCODE_UP] && dir != "d") {
      dir = "u";
   }
-  if (keystates[SDL_SCANCODE_DOWN]) {
+  if (keystates[SDL_SCANCODE_DOWN] && dir != "u") {
     dir = "d";
   }
-  if (keystates[SDL_SCANCODE_LEFT]) {
+  if (keystates[SDL_SCANCODE_LEFT] && dir != "r") {
     dir = "l";
   }
-  if (keystates[SDL_SCANCODE_RIGHT]) {
+  if (keystates[SDL_SCANCODE_RIGHT] && dir != "l") {
     dir = "r";
   }
 }
 
 void move(void){
-    SDL_Rect square = fenetre.GetRect();
-    if (dir == "r"){
-        square.x += 20;
-    }
-    if (dir == "l"){
-        square.x -= 20;
-    }
-    if (dir == "u"){
-        square.y += 20;
-    }
-    if (dir == "d"){
-        square.x -= 20;
+    
+}
+   
+void printTab(){
+    for (int l=0; l<NBL; l++) {
+        for (int c=0; c<NBC; c++) {
+            if(tab[l][c] > 1){
+                tab[l][c] -= 1;
+     
+            }
+            else if(tab[l][c] = 0){
+
+            }
+            else if(tab[l][c] < 0){
+
+            }else{
+                tab[l][c] -= 1;
+            }
+        }
     }
 }
 
@@ -115,6 +126,7 @@ int main(){
     }
     move();
     keyboard();
+    /*
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
@@ -122,7 +134,7 @@ int main(){
     SDL_RenderFillRect(renderer, &square);
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
-
+    */
 
     }
 }
