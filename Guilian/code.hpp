@@ -12,8 +12,18 @@ class MainSDLWindow {
         int Init(const char name[], int width, int height);
         SDL_Renderer *GetRenderer();
         SDL_Rect GetRect();
+        SDL_Rect rect;
     private:
         SDL_Window * window;
         SDL_Renderer * renderer;
-        SDL_Rect rect;
+};
+
+class Snake {
+    public:
+    Snake();
+    ~Snake();
+    void keyboard(void);
+    int length;
+    int head[2];
+    string dir;
 };

@@ -4,10 +4,8 @@
 #define NBC 32
 
 MainSDLWindow fenetre;
-
-string dir = "r";
+Snake snk;
 int **tab = NULL;
-int head[2];
 
 
 MainSDLWindow::MainSDLWindow(){
@@ -19,26 +17,6 @@ MainSDLWindow::~MainSDLWindow(){
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
-
-int **tab_malloc() {
-  int **tab_ = (int**)malloc(NBL * sizeof(int*));
-  for(int l=0; l<NBL; l++)
-    tab_[l] = (int*)malloc(NBC * sizeof(int));
-  return tab_;
-}
-
-void initTab(){
-    tab = tab_malloc();
-    for (int l=0; l<NBL; l++) {
-        for (int c=0; c<NBC; c++) {
-	  tab[l][c] = 0; 
-        }
-    }
-    tab[NBL/2][NBC/2] = 2;
-    head[0] = NBL/2;
-    head[1] = NBC/2;
-}
-
 
 SDL_Rect MainSDLWindow::GetRect(){
     return rect;
@@ -66,12 +44,20 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void){
     return renderer;
 }
 
+Snake::Snake(){
+    head[2];
+    length = 2;
+    dir = "r";
+}
 
-void keyboard() {
+Snake::~Snake(){
+}
+
+void Snake::keyboard(void) {
   const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 
   if (keystates[SDL_SCANCODE_UP] && dir != "d") {
-     dir = "u";
+    dir = "u";
   }
   if (keystates[SDL_SCANCODE_DOWN] && dir != "u") {
     dir = "d";
@@ -84,24 +70,64 @@ void keyboard() {
   }
 }
 
-void move(void){
-    
+int **tab_malloc() {
+  int **tab_ = (int**)malloc(NBL * sizeof(int*));
+  for(int l=0; l<NBL; l++)
+    tab_[l] = (int*)malloc(NBC * sizeof(int));
+  return tab_;
 }
-   
-void printTab(){
+
+void initTab(){
+    tab = tab_malloc();
     for (int l=0; l<NBL; l++) {
         for (int c=0; c<NBC; c++) {
-            if(tab[l][c] > 1){
+	  tab[l][c] = 0; 
+        }
+    }
+    tab[NBL/2][NBC/2] = 3;
+    snk.head[0] = NBL/2;
+    snk.head[1] = NBC/2;
+}
+
+void move(void){
+    if ( snk.dir == "d") {
+        snk.head[0] += 1;
+    }
+    else if ( snk.dir == "u") {
+        snk.head[0] -= 1;
+    }
+    else if ( snk.dir == "r") {
+        snk.head[1] += 1;
+    }
+    else if ( snk.dir == "l") {
+        snk.head[1] -= 1;
+    }
+    tab[snk.head[0]][snk.head[1]] = snk.length+1;
+}
+   
+void printTab(SDL_Renderer *renderer, SDL_Rect sprite_snake){
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    for (int l=0; l<NBL; l++) {
+        for (int c=0; c<NBC; c++) {
+            if(tab[l][c] > 2){
                 tab[l][c] -= 1;
-     
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_RenderFillRect(renderer, &sprite_snake);
+                SDL_RenderPresent(renderer);
             }
             else if(tab[l][c] = 0){
-
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_RenderDrawRect(renderer, &sprite_snake);
+                SDL_RenderPresent(renderer);
             }
             else if(tab[l][c] < 0){
 
             }else{
                 tab[l][c] -= 1;
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_RenderDrawRect(renderer, &sprite_snake);
+                SDL_RenderPresent(renderer);
             }
         }
     }
@@ -125,7 +151,8 @@ int main(){
         }
     }
     move();
-    keyboard();
+    snk.keyboard();
+    printTab(renderer,square);
     /*
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -135,6 +162,7 @@ int main(){
     SDL_RenderPresent(renderer);
     SDL_Delay(500);
     */
+    SDL_Delay(500);
 
     }
 }
