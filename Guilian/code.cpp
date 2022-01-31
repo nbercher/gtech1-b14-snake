@@ -1,12 +1,11 @@
-#include "code.hpp"
+#include "MainSDLWindow.hpp"
+#include "snake.hpp"
 
 #define NBL 16
 #define NBC 32
 
 MainSDLWindow fenetre;
 Snake snk;
-int **tab = NULL;
-
 
 MainSDLWindow::MainSDLWindow(){
     this-> window, renderer = NULL;
@@ -46,11 +45,29 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void){
 
 Snake::Snake(){
     head[2];
+    head[0] = NBC/2*20;
+    head[1] = NBL/2*20;
     length = 2;
     dir = "r";
 }
 
 Snake::~Snake(){
+}
+
+void Snake::move(void){
+    if ( dir == "d") {
+        head[0] += 20;
+    }
+    else if ( dir == "u") {
+        head[0] -= 20;
+    }
+    else if ( dir == "r") {
+        head[1] += 20;
+    }
+    else if ( dir == "l") {
+        head[1] -= 20;
+    }
+    tab[head[0]][head[1]] = length+1;
 }
 
 void Snake::keyboard(void) {
@@ -70,41 +87,30 @@ void Snake::keyboard(void) {
   }
 }
 
+int *Snake::getHead(){
+    return head;
+}
+
+string Snake::getDir(){
+    return dir;
+}
+
+int Snake::getLength(){
+    return length;
+}
+
+void Snake::setHead(int value[2]){
+    head[0] = value[0];
+    head[1] = value[1];
+}
+
 int **tab_malloc() {
   int **tab_ = (int**)malloc(NBL * sizeof(int*));
   for(int l=0; l<NBL; l++)
     tab_[l] = (int*)malloc(NBC * sizeof(int));
   return tab_;
 }
-
-void initTab(){
-    tab = tab_malloc();
-    for (int l=0; l<NBL; l++) {
-        for (int c=0; c<NBC; c++) {
-	  tab[l][c] = 0; 
-        }
-    }
-    tab[NBL/2][NBC/2] = 3;
-    snk.head[0] = NBL/2;
-    snk.head[1] = NBC/2;
-}
-
-void move(void){
-    if ( snk.dir == "d") {
-        snk.head[0] += 1;
-    }
-    else if ( snk.dir == "u") {
-        snk.head[0] -= 1;
-    }
-    else if ( snk.dir == "r") {
-        snk.head[1] += 1;
-    }
-    else if ( snk.dir == "l") {
-        snk.head[1] -= 1;
-    }
-    tab[snk.head[0]][snk.head[1]] = snk.length+1;
-}
-   
+ 
 void printTab(SDL_Renderer *renderer, SDL_Rect sprite_snake){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -134,7 +140,8 @@ void printTab(SDL_Renderer *renderer, SDL_Rect sprite_snake){
 }
 
 int main(){
-    initTab();
+    int *head = snk.getHead();
+    int length = snk.getLength();
     bool IsGameRunning = true;
     SDL_Rect square = fenetre.GetRect();
     fenetre.Init("une fenêtre", 600, 600);
@@ -150,7 +157,7 @@ int main(){
             IsGameRunning = false;
         }
     }
-    move();
+    snk.move();
     snk.keyboard();
     printTab(renderer,square);
     /*
