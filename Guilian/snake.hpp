@@ -16,6 +16,7 @@ class Snake {
         int getLength();
         string getDir();
         body head;
+        body tail;
     private:
         int length;
         string dir;

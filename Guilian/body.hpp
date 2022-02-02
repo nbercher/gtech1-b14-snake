@@ -8,12 +8,17 @@ using namespace std;
 
 class body {
     public:
-        void setNext(body);
+        body();
+        ~body();
+        void setPrev(body);
         void print();
         int getCoo();
-        void setCoo(int x, int y);
+        void move();
+        void setx(int a);
+        void sety(int b);
     private:
         int x;
         int y;
         body *next;
+        body *prev;
 };

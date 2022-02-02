@@ -1,5 +1,6 @@
 #include "MainSDLWindow.hpp"
 #include "snake.hpp"
+#include "body.hpp"
 
 #define NBL 16
 #define NBC 32
@@ -43,10 +44,43 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void){
     return renderer;
 }
 
+body::body(){
+    this -> x = NULL;
+    this -> y = NULL;
+    this -> prev = NULL;
+}
+
+body::~body(){}
+
+void body::setPrev(body a){
+    *prev = a;
+}
+
+int body::getCoo(){
+    return x, y;
+}
+
+void body::setx(int a){
+    x = a;
+}
+
+void body::sety(int b){
+    x = b;
+}
+
+void body::move(){
+    if (prev != NULL){
+        int a, b = prev->getCoo();
+        x = a;
+        y = b;
+        prev->move();
+    }
+}
+
 Snake::Snake(){
-    head[2];
-    head[0] = NBC/2*20;
-    head[1] = NBL/2*20;
+    head.setx(NBC/2);
+    head.sety(NBL/2);
+    tail = head;
     length = 1;
     dir = "r";
 }
@@ -55,17 +89,22 @@ Snake::~Snake(){
 }
 
 void Snake::move(void){
+
+    tail.move();
+
+    int x, y = head.getCoo();
+    
     if ( dir == "d") {
-        head[0] += 20;
+        head.setx(x+1);
     }
     else if ( dir == "u") {
-        head[0] -= 20;
+        head.setx(x-1);
     }
     else if ( dir == "r") {
-        head[1] += 20;
+        head.sety(y+1);
     }
     else if ( dir == "l") {
-        head[1] -= 20;
+        head.sety(y-1);
     }
 }
 
@@ -120,7 +159,6 @@ int main(){
     }
     snk.move();
     snk.keyboard();
-    printTab(renderer,square);
     /*
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
