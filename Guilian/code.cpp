@@ -47,7 +47,7 @@ Snake::Snake(){
     head[2];
     head[0] = NBC/2*20;
     head[1] = NBL/2*20;
-    length = 2;
+    length = 1;
     dir = "r";
 }
 
@@ -67,7 +67,6 @@ void Snake::move(void){
     else if ( dir == "l") {
         head[1] -= 20;
     }
-    tab[head[0]][head[1]] = length+1;
 }
 
 void Snake::keyboard(void) {
@@ -87,21 +86,12 @@ void Snake::keyboard(void) {
   }
 }
 
-int *Snake::getHead(){
-    return head;
-}
-
 string Snake::getDir(){
     return dir;
 }
 
 int Snake::getLength(){
     return length;
-}
-
-void Snake::setHead(int value[2]){
-    head[0] = value[0];
-    head[1] = value[1];
 }
 
 int **tab_malloc() {
@@ -111,36 +101,7 @@ int **tab_malloc() {
   return tab_;
 }
  
-void printTab(SDL_Renderer *renderer, SDL_Rect sprite_snake){
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    for (int l=0; l<NBL; l++) {
-        for (int c=0; c<NBC; c++) {
-            if(tab[l][c] > 2){
-                tab[l][c] -= 1;
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderFillRect(renderer, &sprite_snake);
-                SDL_RenderPresent(renderer);
-            }
-            else if(tab[l][c] = 0){
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderDrawRect(renderer, &sprite_snake);
-                SDL_RenderPresent(renderer);
-            }
-            else if(tab[l][c] < 0){
-
-            }else{
-                tab[l][c] -= 1;
-                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-                SDL_RenderDrawRect(renderer, &sprite_snake);
-                SDL_RenderPresent(renderer);
-            }
-        }
-    }
-}
-
 int main(){
-    int *head = snk.getHead();
     int length = snk.getLength();
     bool IsGameRunning = true;
     SDL_Rect square = fenetre.GetRect();

@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <cstdlib>
+#include "body.hpp"
 
 using namespace std;
 
@@ -13,12 +14,10 @@ class Snake {
         void keyboard();
         void move();
         int getLength();
-        int *getHead();
         string getDir();
-        void setHead(int *);
+        body head;
     private:
         int length;
-        int head[2];
         string dir;
 
 };   

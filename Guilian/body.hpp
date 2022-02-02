@@ -8,9 +8,12 @@ using namespace std;
 
 class body {
     public:
-        body next();
+        void setNext(body);
         void print();
-        int *getCoo();
+        int getCoo();
+        void setCoo(int x, int y);
     private:
-        int coordonates[2];
+        int x;
+        int y;
+        body *next;
 };
