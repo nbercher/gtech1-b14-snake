@@ -6,7 +6,7 @@ class fruit{
         ~fruit();
         int getCoo();
         int getType(); 
-        void summon();
+        void summon(int **);
     private:
         int x;
         int y;

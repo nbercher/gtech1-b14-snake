@@ -80,6 +80,29 @@ void body::move(){
     }
 }
 
+int **body::getAllCoo(){
+    int **mytab;
+    if (prev != NULL){
+        int **tab = prev->getAllCoo();
+
+        mytab[0][0]=x;
+        mytab[0][1]=y;
+
+        int **newTab[(sizeof(tab)/sizeof(tab[0]))+1];
+
+        std::copy(tab, tab + sizeof(tab)/sizeof(tab[0]), newTab);
+        std::copy(mytab, mytab + 1, newTab + sizeof(tab)/sizeof(tab[0]));
+ 
+        return *newTab;
+
+    }else{
+        mytab[0][0]=x;
+        mytab[0][1]=y;
+        return mytab;
+    }
+
+}
+
 //SNAKE : class pour une entitée "serpent"
 
 Snake::Snake(){
@@ -129,8 +152,29 @@ void Snake::keyboard(void) {
   }
 }
 
+void Snake::eat(fruit fruit){
+    int a, b = fruit.getCoo();
+    int c, d = head.getCoo();
+    if (a==c && b==d){
+        int **tab = getBlacklist();
+        fruit.summon(tab);
+        newTail();
+    }
+}
+
+void Snake::newTail(){
+    body newTail;
+    tail.getCoo();
+
+}
+
 string Snake::getDir(){
     return dir;
+}
+
+int **Snake::getBlacklist(){
+    int **tab = tail.getAllCoo();
+    return tab;
 }
 
 // FRUIT : objet fruit du jeu
@@ -151,18 +195,22 @@ int fruit::getType(){
     return type;
 }
 
-void fruit::summon(){
+void fruit::summon(int **blackList){
 
-    int isOkay = 0;
+    int isOkay;
     do{
         srand((unsigned int)time(0));
 
         int a = rand()%NBC -1;
         int b = rand()%NBL -1;
 
-        while(){
-            
+        for(int i = sizeof(blackList)/sizeof(blackList[0]); i == 0; i-- ){
+            if (a == blackList[i][0] && a == blackList[i][0]){
+                isOkay = 2;
+            }
         }
+        if (isOkay == 0){isOkay = 1;}
+        else{isOkay = 0;}
 
-    }while(isOkay == 0);
+    }while(isOkay != 1);
 }

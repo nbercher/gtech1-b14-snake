@@ -1,11 +1,5 @@
 #pragma once
-#include <SDL2/SDL.h>
-#include <string>
-#include <iostream>
-#include <cstdlib>
 #include "body.hpp"
-
-using namespace std;
 
 class Snake {
     public:
@@ -13,12 +7,13 @@ class Snake {
         ~Snake();
         void keyboard();
         void move();
-        int getLength();
+        void newTail();
         string getDir();
+        int **getBlacklist();
+        void eat(fruit fruit);
         body head;
         body tail;
     private:
-        int length;
         string dir;
-
+        int **blackList;
 };   
