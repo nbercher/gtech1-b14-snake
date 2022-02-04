@@ -11,7 +11,7 @@ class body {
         void move();
         void setx(int a);
         void sety(int b);
-        void setPrev(body);
+        void setCoo(int a, int b);
     private:
         int x;
         int y;

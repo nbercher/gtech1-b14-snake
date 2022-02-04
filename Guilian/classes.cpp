@@ -23,7 +23,7 @@ SDL_Rect MainSDLWindow::GetRect(){
     return rect;
 }
 
-int MainSDLWindow::Init(const char nom[], int width, int height){
+int MainSDLWindow::init(const char nom[], int width, int height){
     window = SDL_CreateWindow(nom,SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED, width , height , SDL_WINDOW_RESIZABLE);
     if(window == NULL){
         cout << "Erreur lors de la creation d'une fenetre :" << SDL_GetError();
@@ -48,8 +48,6 @@ SDL_Renderer *MainSDLWindow::GetRenderer(void){
 //BODY : classe pour un morceau de serpent
 
 body::body(){
-    this -> x = NULL;
-    this -> y = NULL;
     this -> prev = NULL;
 }
 
@@ -81,26 +79,24 @@ void body::move(){
 }
 
 int **body::getAllCoo(){
-    int **mytab;
     if (prev != NULL){
         int **tab = prev->getAllCoo();
 
-        mytab[0][0]=x;
-        mytab[0][1]=y;
+        int *mytab[x,y];
 
-        int **newTab[(sizeof(tab)/sizeof(tab[0]))+1];
 
-        std::copy(tab, tab + sizeof(tab)/sizeof(tab[0]), newTab);
-        std::copy(mytab, mytab + 1, newTab + sizeof(tab)/sizeof(tab[0]));
- 
         return *newTab;
 
     }else{
-        mytab[0][0]=x;
-        mytab[0][1]=y;
+        int *mytab[x,y];
         return mytab;
     }
 
+}
+
+void body::setCoo(int a, int b){
+    x = a;
+    y = b;
 }
 
 //SNAKE : class pour une entitée "serpent"
@@ -109,7 +105,7 @@ Snake::Snake(){
     head.setx(NBC/2);
     head.sety(NBL/2);
     tail = head;
-    dir = "r";
+    dir = 3;
 }
 
 Snake::~Snake(){
@@ -121,16 +117,16 @@ void Snake::move(void){
 
     int x, y = head.getCoo();
     
-    if ( dir == "d") {
+    if ( dir == 2) {
         head.setx(x+1);
     }
-    else if ( dir == "u") {
+    else if ( dir == 1) {
         head.setx(x-1);
     }
-    else if ( dir == "r") {
+    else if ( dir == 3) {
         head.sety(y+1);
     }
-    else if ( dir == "l") {
+    else if ( dir == 4) {
         head.sety(y-1);
     }
 }
@@ -138,17 +134,17 @@ void Snake::move(void){
 void Snake::keyboard(void) {
   const Uint8 *keystates = SDL_GetKeyboardState(NULL);
 
-  if (keystates[SDL_SCANCODE_UP] && dir != "d") {
-    dir = "u";
+  if (keystates[SDL_SCANCODE_UP] && dir != 2) {
+    dir = 1;
   }
-  if (keystates[SDL_SCANCODE_DOWN] && dir != "u") {
-    dir = "d";
+  else if (keystates[SDL_SCANCODE_DOWN] && dir != 1) {
+    dir = 2;
   }
-  if (keystates[SDL_SCANCODE_LEFT] && dir != "r") {
-    dir = "l";
+  else if (keystates[SDL_SCANCODE_LEFT] && dir != 3) {
+    dir = 4;
   }
-  if (keystates[SDL_SCANCODE_RIGHT] && dir != "l") {
-    dir = "r";
+  else if (keystates[SDL_SCANCODE_RIGHT] && dir != 4) {
+    dir = 3;
   }
 }
 
@@ -164,11 +160,13 @@ void Snake::eat(fruit fruit){
 
 void Snake::newTail(){
     body newTail;
-    tail.getCoo();
-
+    int a, b = tail.getCoo();
+    newTail.setCoo(a ,b);
+    newTail.setPrev(tail);
+    tail = newTail;
 }
 
-string Snake::getDir(){
+int Snake::getDir(){
     return dir;
 }
 
@@ -177,12 +175,27 @@ int **Snake::getBlacklist(){
     return tab;
 }
 
+int Snake::colision(){
+    int **tab = getBlacklist();
+    int a, b = head.getCoo();
+    if (a == -1 || a == NBC){
+        return 1;
+    }else if(b == -1 || b == NBL){
+        return 1;
+    }
+    for(int i = sizeof(blackList)/sizeof(blackList[0]); i == 0; i-- ){
+        if (a == blackList[i][0] && b == blackList[i][1]){
+            return 1;
+        }
+    }
+    return 0;
+}
+
 // FRUIT : objet fruit du jeu
 
 fruit::fruit(){
-    this -> x = NULL;
-    this -> y = NULL;
     this -> type = 1;
+
 }
 
 fruit::~fruit(){}
@@ -205,7 +218,7 @@ void fruit::summon(int **blackList){
         int b = rand()%NBL -1;
 
         for(int i = sizeof(blackList)/sizeof(blackList[0]); i == 0; i-- ){
-            if (a == blackList[i][0] && a == blackList[i][0]){
+            if (a == blackList[i][0] && b == blackList[i][1]){
                 isOkay = 2;
             }
         }

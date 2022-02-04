@@ -1,5 +1,6 @@
 #pragma once
 #include "body.hpp"
+#include "fruit.hpp"
 
 class Snake {
     public:
@@ -8,12 +9,13 @@ class Snake {
         void keyboard();
         void move();
         void newTail();
-        string getDir();
+        int getDir();
         int **getBlacklist();
         void eat(fruit fruit);
+        int colision();
         body head;
         body tail;
     private:
-        string dir;
+        int dir;
         int **blackList;
 };   
