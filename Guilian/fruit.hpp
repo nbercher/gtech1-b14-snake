@@ -1,4 +1,5 @@
 #pragma once
+#include "snake.hpp"
 
 class fruit{
     public:
@@ -6,7 +7,7 @@ class fruit{
         ~fruit();
         int getCoo();
         int getType(); 
-        void summon(int **);
+        void summon(Snake snk);
     private:
         int x;
         int y;

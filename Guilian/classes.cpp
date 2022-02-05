@@ -78,20 +78,21 @@ void body::move(){
     }
 }
 
-int **body::getAllCoo(){
+int body::testAllCoo(int a, int b){
     if (prev != NULL){
-        int **tab = prev->getAllCoo();
 
-        int *mytab[x,y];
-
-
-        return *newTab;
-
-    }else{
-        int *mytab[x,y];
-        return mytab;
+        int test = prev->testAllCoo(a,b);
+        
+        if (test == 1){
+            return 1;
+        }
+        if (x == a && y == b){
+            return 1;
+        
+        return 0;
+        }
     }
-
+    return 0;
 }
 
 void body::setCoo(int a, int b){
@@ -148,12 +149,11 @@ void Snake::keyboard(void) {
   }
 }
 
-void Snake::eat(fruit fruit){
+void Snake::eat(fruit fruit, Snake snk){
     int a, b = fruit.getCoo();
     int c, d = head.getCoo();
     if (a==c && b==d){
-        int **tab = getBlacklist();
-        fruit.summon(tab);
+        fruit.summon(snk);
         newTail();
     }
 }
@@ -170,25 +170,25 @@ int Snake::getDir(){
     return dir;
 }
 
-int **Snake::getBlacklist(){
-    int **tab = tail.getAllCoo();
-    return tab;
-}
 
 int Snake::colision(){
-    int **tab = getBlacklist();
     int a, b = head.getCoo();
     if (a == -1 || a == NBC){
         return 1;
     }else if(b == -1 || b == NBL){
         return 1;
     }
-    for(int i = sizeof(blackList)/sizeof(blackList[0]); i == 0; i-- ){
-        if (a == blackList[i][0] && b == blackList[i][1]){
-            return 1;
-        }
+    int test = tail.testAllCoo(a,b);
+    if (test == 1){
+        return 1;
     }
+
     return 0;
+}
+
+int Snake::testBody(int a, int b){
+    int test = tail.testAllCoo(a, b);
+    return test;
 }
 
 // FRUIT : objet fruit du jeu
@@ -208,22 +208,19 @@ int fruit::getType(){
     return type;
 }
 
-void fruit::summon(int **blackList){
+void fruit::summon(Snake snk){
 
-    int isOkay;
+    int isOkay = 1;
     do{
         srand((unsigned int)time(0));
 
         int a = rand()%NBC -1;
         int b = rand()%NBL -1;
 
-        for(int i = sizeof(blackList)/sizeof(blackList[0]); i == 0; i-- ){
-            if (a == blackList[i][0] && b == blackList[i][1]){
-                isOkay = 2;
-            }
+        int test = snk.testBody(a,b);
+        if (test == 0){
+            isOkay = 0;
         }
-        if (isOkay == 0){isOkay = 1;}
-        else{isOkay = 0;}
 
     }while(isOkay != 1);
 }

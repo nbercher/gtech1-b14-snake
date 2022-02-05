@@ -10,12 +10,11 @@ class Snake {
         void move();
         void newTail();
         int getDir();
-        int **getBlacklist();
-        void eat(fruit fruit);
+        int testBody(int a, int b);
+        void eat(fruit fruit, Snake snk);
         int colision();
         body head;
         body tail;
     private:
         int dir;
-        int **blackList;
 };   

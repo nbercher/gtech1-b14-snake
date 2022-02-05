@@ -7,7 +7,7 @@ class body {
         void setPrev(body);
         void print();
         int getCoo();
-        int **getAllCoo();
+        int testAllCoo(int a, int b);
         void move();
         void setx(int a);
         void sety(int b);

@@ -4,13 +4,13 @@
 #define NBL 16
 #define NBC 32
 
+
 int main (){
     MainSDLWindow window;
     window.init("Snake",1200,600);
     Snake snk;
     fruit fruit;
-    int **tab = snk.getBlacklist();
-    fruit.summon(tab);
+    fruit.summon(snk);
 
     int GameIsRunning = 1;
 
@@ -26,8 +26,11 @@ int main (){
             } 
     snk.keyboard();
     snk.move();
-    snk.eat(fruit);
-    snk.colision();
+    int test = snk.colision();
+    if (test == 1){
+        GameIsRunning = 0;
+    }
+    snk.eat(fruit, snk);
 
 
 
